@@ -1,10 +1,14 @@
 import styles from "./Login.module.css";
 import bgImg from "../../../assets/Hais_Home_background.png";
 import logoImg from "../../../assets/android-chrome-512x512.png";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import UserContext from "../../../components/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const inputRef = useRef([]);
+  const userCtx = useContext(UserContext);
+  const nav = useNavigate();
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -39,13 +43,14 @@ export default function Login() {
         password: "",
       });
     } else {
-      return alert("회원가입 성공!");
+      userCtx.setUserData(inputs);
+      nav("/");
     }
   };
 
   return (
-    <div className={styles.login}>
-      <div className={styles["input-contaienr"]}>
+    <>
+      <div className={styles["input-container"]}>
         <div className={styles["information-container"]}>
           <img src={logoImg} alt="logo" />
           <p className={styles.title}>Sign in</p>
@@ -53,13 +58,15 @@ export default function Login() {
             <p>Don't have an account?</p>
             <a href="">Sign Up</a>
           </div>
-          <p className={styles.description}>
-            You are browsing <span>Fuse React Demo</span>.
-            <br />
-            Click on the "Sign in" button to access
-            <br />
-            the Demo and Documentation.
-          </p>
+          <div className={styles["description-container"]}>
+            <p className={styles.description}>
+              You are browsing <span>Fuse React Demo</span>.
+              <br />
+              Click on the "Sign in" button to access
+              <br />
+              the Demo and Documentation.
+            </p>
+          </div>
         </div>
         <form
           className={styles["input-form-container"]}
@@ -79,7 +86,7 @@ export default function Login() {
           <div className={styles.input}>
             <label>Password*</label>
             <input
-              type="text"
+              type="password"
               name="password"
               placeholder="12글자 이상 20글자 이하"
               value={password}
@@ -101,17 +108,19 @@ export default function Login() {
       </div>
       <div className={styles.background}>
         <img src={bgImg} alt="backGround" />
-        <p className={styles.title}>
-          대학진학을 위한
-          <br />
-          선택교과를 탐색하세요
-        </p>
-        <p className={styles["sub-title"]}>
-          HAIS에서 희망대학,희망학과를 입력하고
-          <br />
-          현재 나의 상태를 파악하여 수강할 과목을 결정하세요!
-        </p>
+        <div className={styles["title-container"]}>
+          <p className={styles.title}>
+            대학진학을 위한
+            <br />
+            선택교과를 탐색하세요
+          </p>
+          <p className={styles["sub-title"]}>
+            HAIS에서 희망대학,희망학과를 입력하고
+            <br />
+            현재 나의 상태를 파악하여 수강할 과목을 결정하세요!
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
