@@ -6,11 +6,11 @@ import userGroup from "../../../assets/user-group.png";
 import userPencil from "../../../assets/user-pencil.png";
 import userAcademicCap from "../../../assets/user-academic-cap.png";
 
-import styles from "./UserHeader.module.css";
+import styles from "./MainHeader.module.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-export default function UserHeader() {
+export default function MainHeader() {
   const linkItemList = [
     {
       img: userCircle,
@@ -24,18 +24,13 @@ export default function UserHeader() {
     },
     {
       img: userPencil,
-      title: "포스팅",
-      to: "post",
+      title: "과목별 확인",
+      to: "subject",
     },
     {
       img: userAcademicCap,
       title: "고등학교 입력",
       to: "high",
-    },
-    {
-      img: userAcademicCap,
-      title: "대학교 입력",
-      to: "univ",
     },
   ];
 
@@ -44,11 +39,10 @@ export default function UserHeader() {
     false,
     false,
     false,
-    false,
   ]);
 
   const listActiveListHandler = (index) => {
-    let newListActiveList = [false, false, false, false, false];
+    let newListActiveList = [false, false, false, false];
     newListActiveList[index] = true;
     setListActiveList(newListActiveList);
   };

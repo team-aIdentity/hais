@@ -1,4 +1,4 @@
-.login {
+.signup {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +31,8 @@
     line-height: 40px;
     /* 125% */
     letter-spacing: -0.8px;
+
+    margin-bottom: 20px;
   }
 }
 

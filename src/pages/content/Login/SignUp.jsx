@@ -1,10 +1,10 @@
-import styles from "./Login.module.css";
+import styles from "./SignUp.module.css";
 import bgImg from "../../../assets/Hais_Home_background.png";
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import { useContext, useRef, useState } from "react";
 import UserContext from "../../../components/context/UserContext";
 import FirebaseContext from "../../../components/context/FirebaseContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const createUserAccount = async (inputs, nav, fbCtx) => {
   const user = await fbCtx.createUserAccountHandle(
@@ -18,6 +18,7 @@ const createUserAccount = async (inputs, nav, fbCtx) => {
     school: {
       schoolName: "",
       schoolType: "",
+      schoolArea: "",
     },
     subject: [],
   };
@@ -25,7 +26,7 @@ const createUserAccount = async (inputs, nav, fbCtx) => {
   nav("/");
 };
 
-export default function Login() {
+export default function SignUp() {
   const inputRef = useRef([]);
 
   const fbCtx = useContext(FirebaseContext);
@@ -49,7 +50,7 @@ export default function Login() {
     });
   };
 
-  const loginHandler = (e) => {
+  const signUpHandler = (e) => {
     e.preventDefault();
     if (!vaildEmail) {
       alert("유효하지 않은 email 입니다.");
@@ -76,14 +77,10 @@ export default function Login() {
 
   return (
     <>
-      <div className={styles.login}>
+      <div className={styles.signup}>
         <div className={styles["information-container"]}>
           <img src={logoImg} alt="logo" />
-          <p className={styles.title}>Sign in</p>
-          <div className={styles["signup-container"]}>
-            <p>Don't have an account?</p>
-            <Link to="signup">Sign Up</Link>
-          </div>
+          <p className={styles.title}>Sign Up</p>
           <div className={styles["description-container"]}>
             <p className={styles.description}>
               You are browsing <span>Fuse React Demo</span>.
@@ -96,14 +93,14 @@ export default function Login() {
         </div>
         <form
           className={styles["input-form-container"]}
-          onSubmit={loginHandler}
+          onSubmit={signUpHandler}
         >
           <div className={styles.input}>
             <label>Email*</label>
             <input
               type="text"
               name="email"
-              placeholder="이메일을 입력해주세요"
+              placeholder="asd1234@gmail.com"
               value={email}
               onChange={handleChange}
               ref={(el) => (inputRef.current[0] = el)}
@@ -114,21 +111,14 @@ export default function Login() {
             <input
               type="password"
               name="password"
-              placeholder="비밀번호를 입력해주세요"
+              placeholder="8글자 이상 20글자 이하"
               value={password}
               onChange={handleChange}
               ref={(el) => (inputRef.current[1] = el)}
             />
           </div>
           <div className={styles["submit-container"]}>
-            <div className={styles.checkbox}>
-              <div>
-                <input type="checkbox" />
-                <p>Remember me</p>
-              </div>
-              <a href="">Forgot password?</a>
-            </div>
-            <button type="submit">Sign in</button>
+            <button type="submit">Sign Up</button>
           </div>
         </form>
       </div>
