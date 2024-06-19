@@ -1,42 +1,13 @@
 import styles from "./Login.module.css";
-import bgImg from "../../../assets/Hais_Home_background.png";
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import { useContext, useRef, useState } from "react";
 import UserContext from "../../../components/context/UserContext";
-import FirebaseContext from "../../../components/context/FirebaseContext";
 import { Link, useNavigate } from "react-router-dom";
-
-const createUserAccount = async (inputs, nav, fbCtx) => {
-  const user = await fbCtx.createUserAccountHandle(
-    inputs.email,
-    inputs.password
-  );
-  const userData = {
-    email: inputs.email,
-    accessToken: user.accessToken,
-    uid: user.uid,
-    school: {
-      schoolName: "",
-      schoolType: "",
-    },
-    subject: [],
-  };
-  fbCtx.setDocHandle("users", inputs.email, userData);
-  nav("/");
-};
+import LoginImage from "./LoginImage";
 
 export default function Login() {
-  const inputRef = useRef([]);
-
-  const fbCtx = useContext(FirebaseContext);
   const userCtx = useContext(UserContext);
   const nav = useNavigate();
-
-  const [inputs, setInputs] = useState({
-    email: "",
-    password: "",
-  });
-  const { email, password } = inputs;
 
   const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
   const vaildEmail = email.match(regexp);
@@ -70,7 +41,7 @@ export default function Login() {
         ...userCtx.userData,
         email: inputs.email,
       });
-      createUserAccount(inputs, nav, fbCtx);
+      createUserAccount(inputs, nav);
     }
   };
 
@@ -132,21 +103,7 @@ export default function Login() {
           </div>
         </form>
       </div>
-      <div className={styles.background}>
-        <img src={bgImg} alt="backGround" />
-        <div className={styles["title-container"]}>
-          <p className={styles.title}>
-            대학진학을 위한
-            <br />
-            선택교과를 탐색하세요
-          </p>
-          <p className={styles["sub-title"]}>
-            HAIS에서 희망대학,희망학과를 입력하고
-            <br />
-            현재 나의 상태를 파악하여 수강할 과목을 결정하세요!
-          </p>
-        </div>
-      </div>
+      <LoginImage />
     </>
   );
 }

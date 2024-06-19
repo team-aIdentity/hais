@@ -9,22 +9,22 @@ import bellImg from "../../../../assets/bell.png";
 import dummyProfile from "../../../../assets/dummy_profile.png";
 import UserHighInput from "./components/UserHighInput";
 
-const btn = (iconList) => {
-  return (
-    <div className={styles["button-container"]}>
-      {iconList.map((value, index) => (
-        <button key={index}>
-          <img src={value} alt="icon-image" />
-        </button>
-      ))}
-    </div>
-  );
-};
-
-const buttonIconList1 = btn([calendarImg, mailImg, groupImg]);
-const buttonIconList2 = btn([searchImg, bookmarkImg, bellImg]);
-
 export default function High() {
+  const btn = (iconList) => {
+    return (
+      <div className={styles["button-container"]}>
+        {iconList.map((value, index) => (
+          <button key={index}>
+            <img src={value} alt="icon-image" />
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  const buttonIconList1 = btn([calendarImg, mailImg, groupImg]);
+  const buttonIconList2 = btn([searchImg, bookmarkImg, bellImg]);
+
   return (
     <div className={styles.high}>
       <div className={styles.header}>

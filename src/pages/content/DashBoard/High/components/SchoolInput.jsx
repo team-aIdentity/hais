@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import styles from "./UserHighInput.module.css";
 import { useContext } from "react";
 import UserContext from "../../../../../components/context/UserContext";
-import FirebaseContext from "../../../../../components/context/FirebaseContext";
+// import setUpdateDoc from "../../../../../hooks/useUpdateDoc";
+import useSetChildDoc from "../../../../../hooks/useSetChildDoc";
 
 export default function SchoolInput() {
   const { register, handleSubmit } = useForm();
   const ctx = useContext(UserContext);
-  const fbCtx = useContext(FirebaseContext);
 
   const { userData, setUpUserData } = ctx;
 
@@ -19,42 +19,43 @@ export default function SchoolInput() {
         title: "학교 이름",
         name: "schoolName",
         inputType: 0,
-        defaultValue: userData.school.schoolName,
       },
       {
         title: "학교 유형",
         name: "schoolType",
         inputType: 1,
         optionList: schoolType,
-        defaultValue: userData.school.schoolType,
       },
       {
         title: "관할 지역",
         name: "schoolArea",
         inputType: 1,
         optionList: areaType,
-        defaultValue: userData.school.schoolArea,
       },
     ],
   };
-
-  console.log(value);
 
   const setSchoolDataHandle = async (data) => {
     if (data == userData.school) return;
 
     try {
-      let newUserData = {
-        ...userData,
-        school: data,
-      };
-      await fbCtx.updateDocHandle("users", userData.email, newUserData);
-      await setUpUserData();
-
-      await console.log("Upload SchoolInput Data");
+      console.log(userData.id);
+      await useSetChildDoc("users", userData.id, "school", "1-2", data);
     } catch (e) {
-      console.log("SchoolInput >>>>> " + e);
+      console.log("School Input >>>>> " + e);
     }
+    // try {
+    //   let newUserData = {
+    //     ...userData,
+    //     // school: data, //
+    //   };
+    //   await setUpdateDoc("users", userData.email, newUserData);
+    //   await setUpUserData();
+
+    //   await console.log("Upload SchoolInput Data");
+    // } catch (e) {
+    //   console.log("SchoolInput >>>>> " + e);
+    // }
   };
 
   return (
@@ -74,17 +75,12 @@ export default function SchoolInput() {
                   <input
                     type="text"
                     name={item.title}
-                    defaultValue={item.defaultValue}
                     placeholder="빈칸을 입력해 주세요"
                     {...register(item.name, { required: true })}
                   />
                 )}
                 {item.inputType === 1 && (
-                  <select
-                    {...register(item.name, { required: true })}
-                    defaultValue={item.defaultValue}
-                    required
-                  >
+                  <select {...register(item.name, { required: true })} required>
                     {item.optionList != null && (
                       <>
                         {item.optionList.map((option, optionIndex) => (
