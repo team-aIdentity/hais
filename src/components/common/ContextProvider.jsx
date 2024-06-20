@@ -1,10 +1,5 @@
-import { FirebaseContextProvider } from "../context/FirebaseContext";
-import { UserContextProvider } from "../context/UserContext";
+import { UserContextProvider } from "./UserContextProvider";
 
 export default function ContextProvider(props) {
-  return (
-    <FirebaseContextProvider>
-      <UserContextProvider>{props.children}</UserContextProvider>
-    </FirebaseContextProvider>
-  );
+  return <UserContextProvider>{props.children}</UserContextProvider>;
 }
