@@ -1,47 +1,58 @@
 import styles from "./Login.module.css";
 import logoImg from "../../../assets/android-chrome-512x512.png";
-import { useContext, useRef, useState } from "react";
+import { useContext } from "react";
 import UserContext from "../../../components/context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "./LoginImage";
+import { useForm } from "react-hook-form";
+import useLoginAccount from "../../../hooks/useLoginAccount";
+
+const signInList = [
+  {
+    label: "Email",
+    name: "email",
+    type: "text",
+    placeholder: "abcd1234@gmail.com",
+    require: true,
+  },
+  {
+    label: "Password",
+    name: "password",
+    type: "password",
+    placeholder: "8자리 이상, 20자리 이하",
+    require: true,
+  },
+];
 
 export default function Login() {
   const userCtx = useContext(UserContext);
   const nav = useNavigate();
 
-  const regexp = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
-  const vaildEmail = email.match(regexp);
-  const vaildPassword = password.length >= 8 && password.length <= 20;
+  const { register, handleSubmit } = useForm();
 
-  const handleChange = (e) => {
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
+  const signinUserAccount = async (email, password) => {
+    const user = await useLoginAccount(email, password);
+    localStorage.setItem("loginedId", user.uid);
+    userCtx.setUpUserData();
+
+    nav("/");
   };
 
-  const loginHandler = (e) => {
-    e.preventDefault();
+  const signInHandler = (data) => {
+    const { email, password } = data;
+
+    const regEmail = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
+    const vaildEmail = email.match(regEmail);
+    const vaildPassword = password.length >= 8 && password.length <= 20;
+
     if (!vaildEmail) {
-      alert("유효하지 않은 email 입니다.");
-      inputRef.current[0].focus();
-      setInputs({
-        ...inputs,
-        email: "",
-      });
+      alert("이메일을 다시 입력해주세요.");
     } else if (!vaildPassword) {
-      alert("유효하지 않은 password 입니다.");
-      inputRef.current[1].focus();
-      setInputs({
-        ...inputs,
-        password: "",
-      });
+      alert("비밀번호를 다시 입력해주세요.");
     } else {
-      userCtx.setUserData({
-        ...userCtx.userData,
-        email: inputs.email,
-      });
-      createUserAccount(inputs, nav);
+      console.log("User Login Input Complete");
+
+      signinUserAccount(email, data);
     }
   };
 
@@ -67,30 +78,22 @@ export default function Login() {
         </div>
         <form
           className={styles["input-form-container"]}
-          onSubmit={loginHandler}
+          onSubmit={handleSubmit((data) => signInHandler(data))}
         >
-          <div className={styles.input}>
-            <label>Email*</label>
-            <input
-              type="text"
-              name="email"
-              placeholder="이메일을 입력해주세요"
-              value={email}
-              onChange={handleChange}
-              ref={(el) => (inputRef.current[0] = el)}
-            />
-          </div>
-          <div className={styles.input}>
-            <label>Password*</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="비밀번호를 입력해주세요"
-              value={password}
-              onChange={handleChange}
-              ref={(el) => (inputRef.current[1] = el)}
-            />
-          </div>
+          {signInList.map((value, index) => (
+            <div className={styles.input} key={index}>
+              <label>
+                {value.label}
+                {value.require && "*"}
+              </label>
+              <input
+                type={value.type}
+                name={value.name}
+                placeholder={value.placeholder}
+                {...register(value.name, { required: value.require })}
+              />
+            </div>
+          ))}
           <div className={styles["submit-container"]}>
             <div className={styles.checkbox}>
               <div>

@@ -29,7 +29,7 @@ export default function MainHeader() {
     },
     {
       img: userAcademicCap,
-      title: "고등학교 입력",
+      title: "과목 입력",
       to: "high",
     },
   ];

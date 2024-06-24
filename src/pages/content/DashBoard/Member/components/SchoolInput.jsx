@@ -1,16 +1,16 @@
-import { areaType, schoolType } from "./UserHighInputList";
+import { areaType, schoolType, schoolYear } from "./SchoolInputList";
 import { useForm } from "react-hook-form";
-import styles from "./UserHighInput.module.css";
-import { useContext } from "react";
+import styles from "./SchoolInput.module.css";
+import { useContext, useState } from "react";
 import UserContext from "../../../../../components/context/UserContext";
-// import setUpdateDoc from "../../../../../hooks/useUpdateDoc";
 import useSetChildDoc from "../../../../../hooks/useSetChildDoc";
+import useGetChildDoc from "../../../../../hooks/useGetChildDoc";
 
 export default function SchoolInput() {
   const { register, handleSubmit } = useForm();
+  const [inputSchoolYear, setInputSchoolYear] = useState(schoolYear[0]);
   const ctx = useContext(UserContext);
-
-  const { userData, setUpUserData } = ctx;
+  const { userData } = ctx;
 
   const value = {
     title: "학교",
@@ -39,23 +39,32 @@ export default function SchoolInput() {
     if (data == userData.school) return;
 
     try {
-      console.log(userData.id);
-      await useSetChildDoc("users", userData.id, "school", "1-2", data);
+      await useSetChildDoc(
+        "users",
+        userData.id,
+        "school",
+        inputSchoolYear,
+        data
+      );
     } catch (e) {
       console.log("School Input >>>>> " + e);
     }
-    // try {
-    //   let newUserData = {
-    //     ...userData,
-    //     // school: data, //
-    //   };
-    //   await setUpdateDoc("users", userData.email, newUserData);
-    //   await setUpUserData();
+  };
 
-    //   await console.log("Upload SchoolInput Data");
-    // } catch (e) {
-    //   console.log("SchoolInput >>>>> " + e);
-    // }
+  const selectSchoolYearHandle = async (e) => {
+    const selectedYear = e.target.value;
+    setInputSchoolYear(selectedYear);
+
+    const schoolData = await useGetChildDoc(
+      "users",
+      userData.id,
+      "school",
+      selectedYear
+    );
+
+    if (schoolData != undefined) {
+      // setDefaultValue(schoolData);
+    }
   };
 
   return (
@@ -65,6 +74,18 @@ export default function SchoolInput() {
     >
       <div className={styles["input-container"]}>
         <p className={styles.title}>{value.title}</p>
+        <select
+          className={styles["school-year"]}
+          onChange={(e) => selectSchoolYearHandle(e)}
+          value={inputSchoolYear}
+          required
+        >
+          {schoolYear.map((option, optionIndex) => (
+            <option key={optionIndex} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
         <ul>
           {value.items.map((item, itemIndex) => (
             <li key={itemIndex}>
@@ -80,7 +101,11 @@ export default function SchoolInput() {
                   />
                 )}
                 {item.inputType === 1 && (
-                  <select {...register(item.name, { required: true })} required>
+                  <select
+                    // defaultValue={item.defaultValue}
+                    {...register(item.name, { required: true })}
+                    required
+                  >
                     {item.optionList != null && (
                       <>
                         {item.optionList.map((option, optionIndex) => (
