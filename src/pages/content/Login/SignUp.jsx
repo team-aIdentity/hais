@@ -2,9 +2,9 @@ import styles from "./SignUp.module.css";
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import navBackImg from "../../../assets/navigate_back.png";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import UserContext from "../../../components/context/UserContext";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useCreateAccount from "../../../hooks/useCreateAccount";
 import useSetDoc from "../../../hooks/useSetDoc";
 import { useForm } from "react-hook-form";
@@ -36,7 +36,7 @@ const SignUpList = [
     label: "Password",
     name: "password",
     type: "password",
-    placeholder: "8자리 이상 20자리 이하",
+    placeholder: "8자리 이상, 20자리 이하",
     require: true,
   },
   {
@@ -66,8 +66,6 @@ export default function SignUp() {
       id: user.uid,
     };
 
-    localStorage.setItem("id", user.uid); //login에 이전
-
     await useSetDoc("users", user.uid, userData);
     nav("/login");
   };
@@ -85,6 +83,7 @@ export default function SignUp() {
     const vaildPassword = password.length >= 8 && password.length <= 20;
 
     if (!vaildName) {
+      //switch 로 바꾸기
       alert("이름을 다시 입력해주세요.");
     } else if (!vaildPhone) {
       alert("번호를 다시 입력해주세요.");
@@ -95,12 +94,7 @@ export default function SignUp() {
     } else if (!vaildConFirmPassword) {
       alert("비밀번호가 서로 다릅니다.");
     } else {
-      console.log("SignUp Complete");
-
-      userCtx.setUserData({
-        ...userCtx.userData,
-        ...data,
-      }); // login에 이전
+      console.log("User SignUp Input Complete");
 
       createUserAccount(data);
     }
