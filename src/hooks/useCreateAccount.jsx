@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../components/firebase/firebase";
+import { auth, db } from "../components/firebase/firebase";
 import useCryptoValue from "./useCryptoValue";
+import { doc, setDoc } from "firebase/firestore";
 
 export default async function useCreateAccount(email, password) {
   try {
@@ -10,6 +11,10 @@ export default async function useCreateAccount(email, password) {
       email,
       encryptPW
     );
+    await setDoc(doc(db, "user-auth", user.uid), {
+      uid: user.uid,
+      email: email,
+    });
     return user;
   } catch (e) {
     console.log("createAccount >>>>> " + e);

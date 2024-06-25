@@ -5,7 +5,7 @@ const useCryptoValue = async (data) => {
     const secretKey = import.meta.env.VITE_CRYPTO_SECRET_KEY;
     const hash = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey)
       .toString()
-      .slice(0, 16);
+      .slice(0, 8);
     return hash;
   } catch (e) {
     console.log("CryptoJS >>>>> code: " + e.code + " / message: " + e.message);

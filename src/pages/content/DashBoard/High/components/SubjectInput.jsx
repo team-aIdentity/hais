@@ -10,7 +10,7 @@ import SubjectList from "./SubjectList";
 export default function SubjectInput() {
   const ctx = useContext(UserContext);
   const { register, handleSubmit } = useForm();
-  const { userData, setUpUserData } = ctx;
+  const { userData } = ctx;
   const [subjectType, setSubjectType] = useState([]);
 
   const value = {
@@ -40,7 +40,6 @@ export default function SubjectInput() {
   };
 
   const setSubjectHandle = async (data) => {
-    // 과목 중복 방지 코드 필수
     try {
       await useSetChildDoc(
         "users",

@@ -1,12 +1,12 @@
 import styles from "./InputList.module.css";
 
-export default function InputList({ item }) {
+export default function InputList1({ item }) {
   return (
-    <li>
+    <li className={styles["input-list"]}>
       <p>{item.title}</p>
       <div className={styles["input-label"]}>
         <label>{item.title}*</label>
-        <select onChange={(e) => majorOfUnivHandle(e)} required>
+        <select onChange={item.onChange}>
           {item.optionList != null && (
             <>
               {item.optionList.map((option, optionIndex) => (
