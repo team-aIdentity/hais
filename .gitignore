@@ -3,3 +3,4 @@
 .pnp.js
 *.env
 *.pem
+src/components/firebase/firebase.js

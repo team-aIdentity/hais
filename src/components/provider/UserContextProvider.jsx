@@ -23,11 +23,9 @@ export const UserContextProvider = (props) => {
   };
 
   const getUserSubject = async () => {
-    const preUserSubject = await useGetChildDocs(
-      "users",
-      userData.id,
-      "subject"
-    );
+    const id = localStorage.getItem("loginedId");
+
+    const preUserSubject = await useGetChildDocs("users", id, "subject");
     setUserSubject(preUserSubject);
   };
 
