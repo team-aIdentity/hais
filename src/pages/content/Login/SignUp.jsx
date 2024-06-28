@@ -36,7 +36,7 @@ const SignUpList = [
     label: "Password",
     name: "password",
     type: "password",
-    placeholder: "8자리 이상, 20자리 이하",
+    placeholder: "6자리 이상, 20자리 이하",
     require: true,
   },
   {
