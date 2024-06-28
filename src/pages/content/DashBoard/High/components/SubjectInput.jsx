@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { gradeType, subjectYear } from "./UserHighInputList";
+import { gradeType } from "./UserHighInputList";
 import styles from "./UserHighInput.module.css";
-import { useForm } from "react-hook-form";
 import useGetDocs from "../../../../../hooks/useGetDocs";
 import UserContext from "../../../../../components/context/UserContext";
 import useSetChildDoc from "../../../../../hooks/useSetChildDoc";
@@ -9,9 +8,27 @@ import SubjectList from "./SubjectList";
 
 export default function SubjectInput() {
   const ctx = useContext(UserContext);
-  const { register, handleSubmit } = useForm();
-  const { userData } = ctx;
+
+  const { userData, userSubject, getUserSubject } = ctx;
   const [subjectType, setSubjectType] = useState([]);
+
+  const [subjectInput, setSubjectInput] = useState({});
+
+  const setSubjectTypeHandle = (e) => {
+    let inputSubject = subjectType[e.target.value];
+    setSubjectInput({
+      ...subjectInput,
+      ...inputSubject,
+    });
+  };
+
+  const setSubjectGradeHandle = (e) => {
+    const grade = Number(e.target.value) + 1;
+    setSubjectInput({
+      ...subjectInput,
+      subjectGrade: grade,
+    });
+  };
 
   const value = {
     title: "과목",
@@ -19,14 +36,14 @@ export default function SubjectInput() {
       {
         title: "과목 유형",
         name: "subjectType",
-        inputType: 1,
         optionList: subjectType,
+        onchange: setSubjectTypeHandle,
       },
       {
         title: "과목 등급",
         name: "subjectGrade",
-        inputType: 1,
         optionList: gradeType,
+        onchange: setSubjectGradeHandle,
       },
     ],
   };
@@ -34,21 +51,22 @@ export default function SubjectInput() {
   const getSubjectTypeFunc = async () => {
     const subjectTypeData = await useGetDocs("optional_subject");
     let subjectType = [];
-    subjectTypeData.forEach((data) => subjectType.push(data.name));
+    subjectTypeData.forEach((data) => subjectType.push(data));
 
     setSubjectType(subjectType);
   };
 
-  const setSubjectHandle = async (data) => {
+  const setSubjectHandle = async (e) => {
     try {
+      e.preventDefault();
       await useSetChildDoc(
         "users",
         userData.id,
         "subject",
-        data.subjectType,
-        data
+        subjectInput.name,
+        subjectInput
       );
-      await ctx.getUserSubject();
+      await getUserSubject();
     } catch (e) {
       console.log("Subject Input >>>>> " + e);
     }
@@ -61,43 +79,28 @@ export default function SubjectInput() {
   return (
     <form
       className={styles["item-container"]}
-      onSubmit={handleSubmit((data) => setSubjectHandle(data))}
+      onSubmit={(e) => setSubjectHandle(e)}
     >
       <div className={styles["input-container"]}>
         <p className={styles.title}>{value.title}</p>
         <ul>
-          <select
-            className={styles["subject-year"]}
-            // {...register("subjectYear", { required: true })}
-            // required
-          >
-            {subjectYear.map((option, optionIndex) => (
-              <option key={optionIndex} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
           {value.items.map((item, itemIndex) => (
             <li key={itemIndex}>
               <p>{item.title}</p>
               <div className={styles["input-label"]}>
                 <label>{item.title}*</label>
-                <select {...register(item.name, { required: true })} required>
-                  {item.optionList != null && (
-                    <>
-                      {item.optionList.map((option, optionIndex) => (
-                        <option key={optionIndex} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </>
-                  )}
+                <select onChange={(e) => item.onchange(e)} required>
+                  {item.optionList.map((option, optionIndex) => (
+                    <option key={optionIndex} value={optionIndex}>
+                      {option.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </li>
           ))}
         </ul>
-        <SubjectList />
+        <SubjectList subjectList={ctx.userSubject} />
       </div>
       <div className={styles["button-container"]}>
         <button type="submit">과목 추가하기</button>

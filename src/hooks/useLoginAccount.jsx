@@ -1,11 +1,13 @@
 import axios from "axios";
 import useCryptoValue from "./useCryptoValue";
+import { auth } from "../components/firebase/firebase";
 
 export default async function useLoginAccount(email, password) {
   try {
     const encryptPW = await useCryptoValue(password);
     const url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDoAXahn4mOzl6ioNd2HvkPI7RxSYoYA8I";
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
+      auth.app.options.apiKey;
 
     const data = {
       email: `${email}`,
@@ -19,10 +21,8 @@ export default async function useLoginAccount(email, password) {
       },
     });
 
-    console.log(response.data);
-    // const user = { uid: "EltPvJoDtJWD72L7HsH6STdQzpZ2" };
-    return user;
+    return response.data.localId;
   } catch (e) {
-    console.log("Login Account >>>>> " + e);
+    console.error("Login Account >>>>> " + e);
   }
 }

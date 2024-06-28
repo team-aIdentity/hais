@@ -40,6 +40,11 @@
   width: 100%;
 }
 
+.item-container .button-container {
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
 .item-container button {
   width: 158px;
   height: 42.25px;

@@ -10,7 +10,7 @@ export default function InputList1({ item }) {
           {item.optionList != null && (
             <>
               {item.optionList.map((option, optionIndex) => (
-                <option key={optionIndex} value={optionIndex}>
+                <option key={optionIndex} value={option.name}>
                   {option.name}
                 </option>
               ))}

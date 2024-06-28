@@ -8,9 +8,11 @@ import userAcademicCap from "../../../assets/user-academic-cap.png";
 
 import styles from "./MainHeader.module.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import UserContext from "../../../components/context/UserContext";
 
 export default function MainHeader() {
+  const userData = useContext(UserContext).userData;
   const linkItemList = [
     {
       img: userCircle,
@@ -55,8 +57,8 @@ export default function MainHeader() {
       </div>
       <div className={styles["profile-container"]}>
         <img src={profileImg} alt="profile" />
-        <p className={styles.name}>dummy_name</p>
-        <p className={styles.email}>email</p>
+        <p className={styles.name}>{userData.name}</p>
+        <p className={styles.email}>{userData.email}</p>
       </div>
       <ul>
         {linkItemList.map((value, index) => (

@@ -1,14 +1,15 @@
 import { areaType, schoolType, schoolYear } from "./SchoolInputList";
 import { useForm } from "react-hook-form";
 import styles from "./SchoolInput.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserContext from "../../../../../components/context/UserContext";
 import useSetChildDoc from "../../../../../hooks/useSetChildDoc";
 import useGetChildDoc from "../../../../../hooks/useGetChildDoc";
 
 export default function SchoolInput() {
   const { register, handleSubmit } = useForm();
-  const [inputSchoolYear, setInputSchoolYear] = useState(schoolYear[0]);
+  const [inputSchoolYear, setInputSchoolYear] = useState();
+  const [defaultValue, setDefaultValue] = useState("");
   const ctx = useContext(UserContext);
   const { userData } = ctx;
 
@@ -19,6 +20,7 @@ export default function SchoolInput() {
         title: "학교 이름",
         name: "schoolName",
         inputType: 0,
+        defaultValue: defaultValue.schoolName,
       },
       {
         title: "학교 유형",
@@ -46,15 +48,13 @@ export default function SchoolInput() {
         inputSchoolYear,
         data
       );
+      alert("입력을 완료했습니다.");
     } catch (e) {
       console.log("School Input >>>>> " + e);
     }
   };
 
-  const selectSchoolYearHandle = async (e) => {
-    const selectedYear = e.target.value;
-    setInputSchoolYear(selectedYear);
-
+  const getDefaultValueHandle = async (selectedYear) => {
     const schoolData = await useGetChildDoc(
       "users",
       userData.id,
@@ -63,9 +63,19 @@ export default function SchoolInput() {
     );
 
     if (schoolData != undefined) {
-      // setDefaultValue(schoolData);
+      setDefaultValue(schoolData);
     }
   };
+
+  const selectSchoolYearHandle = async (e) => {
+    const selectedYear = e.target.value;
+    setInputSchoolYear(selectedYear);
+    await getDefaultValueHandle(selectedYear);
+  };
+
+  useEffect(() => {
+    getDefaultValueHandle(schoolYear[0]);
+  }, []);
 
   return (
     <form
@@ -96,6 +106,7 @@ export default function SchoolInput() {
                   <input
                     type="text"
                     name={item.title}
+                    defaultValue={item.defaultValue}
                     placeholder="빈칸을 입력해 주세요"
                     {...register(item.name, { required: true })}
                   />
