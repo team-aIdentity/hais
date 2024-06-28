@@ -181,6 +181,17 @@
       ;
     }
   }
+
+  .input[active="true"] {
+    label {
+      color: red;
+    }
+
+    input {
+      border: 2px solid red;
+
+    }
+  }
 }
 
 .submit-container {

@@ -1,20 +1,20 @@
-import { useContext } from "react";
 import styles from "./SubjectList.module.css";
-import UserContext from "../../../../../components/context/UserContext";
 
-export default function SubjectList() {
-  const ctx = useContext(UserContext);
+export default function SubjectList({ subjectList }) {
   return (
-    <div className={styles.list}>
-      <div>
-        {ctx.userSubject != undefined &&
-          ctx.userSubject.map((value, index) => (
-            <li key={index}>
-              <p className={styles.title}>{value.subjectType}</p>
-              <p className={styles.grade}>{value.subjectGrade} 등급</p>
-            </li>
-          ))}
-      </div>
-    </div>
+    <>
+      {subjectList.length !== 0 && (
+        <div className={styles.list}>
+          <div>
+            {[...subjectList].reverse().map((value, index) => (
+              <li key={index}>
+                <p className={styles.title}>{value.name}</p>
+                <p className={styles.grade}>{value.subjectGrade} 등급</p>
+              </li>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

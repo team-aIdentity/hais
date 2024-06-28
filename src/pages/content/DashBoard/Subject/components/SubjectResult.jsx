@@ -1,61 +1,69 @@
-import { useContext } from "react";
-import UserContext from "../../../../../components/context/UserContext";
+import { useContext, useEffect, useState } from "react";
+import {
+  checkUserSubjectOfMajor,
+  needToStudySubjectCountHandle,
+} from "./SubjectInputList";
 import styles from "./SubjectResult.module.css";
+import useGetChildDocs from "../../../../../hooks/useGetChildDocs";
+import UserContext from "../../../../../components/context/UserContext";
+import SubjectListOfMajor from "./SubjectListOfMajor";
 
-const bgColorList = ["blue", "green", "orange", "purple"];
+export default function SubjectResult({ currentUnivMajor }) {
+  const userSubject = useContext(UserContext).userSubject;
+  const { univ, major } = currentUnivMajor;
+  const [subjectListOfMajor, setSubjectListOfMajor] = useState(null);
+  const [resultUserDataOfMajor, setResultUserDataOfMajor] = useState(null);
 
-export default function SubjectResult() {
-  const userData = useContext(UserContext).userData;
-  const userSubject = userData.subject;
+  const getResultByUserData = async () => {
+    const data = await useGetChildDocs("admin_subject", univ, major);
+    const needToStudyCount = await needToStudySubjectCountHandle(univ, major);
+    let [newSubjectListOfMajor, newResultUserDataOfMajor] =
+      await checkUserSubjectOfMajor(data, needToStudyCount, userSubject);
 
-  const subjectPassGrade = [2, 3, 5, 1, 2, 3, 4, 5];
+    setSubjectListOfMajor(newSubjectListOfMajor);
+    setResultUserDataOfMajor(newResultUserDataOfMajor);
+  };
+
+  useEffect(() => {
+    getResultByUserData();
+  }, []);
 
   return (
     <ul className={styles["subject-result"]}>
-      {userSubject.map((value, index) => (
-        <li key={index}>
-          <div className={styles["title-container"]}>
-            <p
-              className={styles["title"]}
-              style={{
-                color: `${
-                  value.grade - subjectPassGrade[value.subject] > 0
-                    ? "red"
-                    : "black"
-                }`,
-              }}
-            >
-              {value.title}
-            </p>
-          </div>
-          <div className={styles["value-container"]}>
-            <div className={styles["slidebar"]}>
-              <p className={styles["grade-title"]}>{value.grade}</p>
-              <div
-                className={styles["avg-divider"]}
-                style={{
-                  width: `calc(${
-                    ((10 - subjectPassGrade[3]) / 9) * 100
-                  }% - 20px)`,
-                }}
-              >
-                <p>합격</p>
-              </div>
-              <div
-                className={styles["value-level-slidebar"]}
-                style={{
-                  width: `${((10 - value.grade) / 9) * 100}%`,
-                  backgroundColor: `${bgColorList[index]}`,
-                }}
-              />
-            </div>
-            <div className={styles["grade-level-container"]}>
-              <p>9등급</p>
-              <p>1등급</p>
-            </div>
-          </div>
-        </li>
-      ))}
+      {subjectListOfMajor !== null &&
+        subjectListOfMajor
+          .slice(0, 4)
+          .map((value, index) => (
+            <SubjectListOfMajor value={value} key={index} index={index} />
+          ))}
+      {resultUserDataOfMajor !== null && (
+        <div className={styles.result}>
+          <p>
+            학과에 반영되는 과목 수 :{" "}
+            {resultUserDataOfMajor.majorSubject.length}
+          </p>
+          <p>
+            학과에 반영되는 과목 :{" "}
+            {resultUserDataOfMajor.majorSubject.map((subject, index) => (
+              <span key={index}>{subject.name} </span>
+            ))}
+          </p>
+          <p>
+            필수로 들어야 하는 과목 추천 :{" "}
+            {resultUserDataOfMajor.needToStudy ? (
+              <>
+                {resultUserDataOfMajor.needToStudySubject.map(
+                  (subject, index) => (
+                    <span key={index}>{subject.name} </span>
+                  )
+                )}
+              </>
+            ) : (
+              "없음"
+            )}
+          </p>
+        </div>
+      )}
     </ul>
   );
 }

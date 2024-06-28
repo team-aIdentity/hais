@@ -18,7 +18,7 @@ export default async function useGetChildDocs(
     return data;
   } catch (e) {
     {
-      e.code != "invalid-argument" && console.log("GetChildDocs >>>>> " + e);
+      console.log("GetChildDocs >>>>> " + e.code);
     }
   }
 }

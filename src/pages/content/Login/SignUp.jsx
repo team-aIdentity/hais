@@ -2,7 +2,7 @@ import styles from "./SignUp.module.css";
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import navBackImg from "../../../assets/navigate_back.png";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../../../components/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import useCreateAccount from "../../../hooks/useCreateAccount";
@@ -30,7 +30,7 @@ const SignUpList = [
     name: "email",
     type: "text",
     placeholder: "abcd1234@gmail.com",
-    require: false,
+    require: true,
   },
   {
     label: "Password",
@@ -49,7 +49,6 @@ const SignUpList = [
 ];
 
 export default function SignUp() {
-  const userCtx = useContext(UserContext);
   const nav = useNavigate();
 
   const { register, handleSubmit } = useForm();
@@ -70,33 +69,46 @@ export default function SignUp() {
     nav("/login");
   };
 
+  const [isNotValid, setIsNotValid] = useState(["", "", "", "", ""]);
+
   const signUpHandler = (data) => {
+    let newIsNotValid = ["", "", "", "", ""];
     const { name, phone, email, password, conFirmPassword } = data;
 
     const regName = /^[가-힣]+$/;
-    const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$/;
+    const regPhone = /^01([0|1|6|7|8|9])([0-9]{4})([0-9]{4})$/;
     const regEmail = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
     const vaildName = name.match(regName);
     const vaildPhone = phone.match(regPhone);
     const vaildEmail = email == "" || email.match(regEmail);
     const vaildConFirmPassword = password == conFirmPassword;
-    const vaildPassword = password.length >= 8 && password.length <= 20;
+    const vaildPassword = password.length >= 6 && password.length <= 20;
 
-    if (!vaildName) {
-      //switch 로 바꾸기
-      alert("이름을 다시 입력해주세요.");
-    } else if (!vaildPhone) {
-      alert("번호를 다시 입력해주세요.");
-    } else if (!vaildEmail) {
-      alert("이메일을 다시 입력해주세요.");
-    } else if (!vaildPassword) {
-      alert("비밀번호를 다시 입력해주세요.");
-    } else if (!vaildConFirmPassword) {
-      alert("비밀번호가 서로 다릅니다.");
-    } else {
-      console.log("User SignUp Input Complete");
-
-      createUserAccount(data);
+    switch (true) {
+      case !vaildName:
+        newIsNotValid[0] = true;
+        setIsNotValid(newIsNotValid);
+        break;
+      case !vaildPhone:
+        newIsNotValid[1] = true;
+        setIsNotValid(newIsNotValid);
+        break;
+      case !vaildEmail:
+        newIsNotValid[2] = true;
+        setIsNotValid(newIsNotValid);
+        break;
+      case !vaildPassword:
+        newIsNotValid[3] = true;
+        setIsNotValid(newIsNotValid);
+        break;
+      case !vaildConFirmPassword:
+        newIsNotValid[4] = true;
+        setIsNotValid(newIsNotValid);
+        break;
+      default:
+        setIsNotValid(newIsNotValid);
+        console.log("User SignUp Input Complete");
+        createUserAccount(data);
     }
   };
 
@@ -126,9 +138,15 @@ export default function SignUp() {
           onSubmit={handleSubmit((data) => signUpHandler(data))}
         >
           {SignUpList.map((value, index) => (
-            <div className={styles.input} key={index}>
+            <div
+              className={styles.input}
+              key={index}
+              active={`${isNotValid[index]}`}
+            >
               <label>
-                {value.label}
+                {isNotValid[index] === true
+                  ? "다시 입력해주세요."
+                  : value.label}
                 {value.require && "*"}
               </label>
               <input
