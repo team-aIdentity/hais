@@ -1,8 +1,7 @@
 .body {
   display: flex;
   width: 100%;
-  height: calc(100% - 75px);
-  padding-left: 40px;
+  height: 100vh;
 
   list-style: none;
 }

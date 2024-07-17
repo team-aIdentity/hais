@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import useGetDoc from "../../hooks/useGetDoc";
-import useGetChildDocs from "../../hooks/useGetChildDocs";
+import useGetSubjectDocsByYear from "../../hooks/useGetSubjectDocsByYear";
 
 export const UserContextProvider = (props) => {
   const [userSubject, setUserSubject] = useState([]);
@@ -24,9 +24,7 @@ export const UserContextProvider = (props) => {
 
   const getUserSubject = async () => {
     const loginedId = localStorage.getItem("loginedId");
-
-    const preUserSubject = await useGetChildDocs("users", loginedId, "subject");
-
+    const preUserSubject = await useGetSubjectDocsByYear(loginedId, "2022년");
     setUserSubject(preUserSubject);
   };
 
@@ -43,6 +41,7 @@ export const UserContextProvider = (props) => {
         setUserData: setUserData,
         setUpUserData: setUpUserData,
         getUserSubject: getUserSubject,
+        setUserSubject: setUserSubject,
       }}
     >
       {props.children}

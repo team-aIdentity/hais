@@ -1,54 +1,70 @@
 import styles from "./AdminSubjectInput.module.css";
 
-import React, { useContext, useEffect, useState } from "react";
-import {
-  subjectGrade,
-  majorOfUnivHandle,
-  needToStudyCountList,
-} from "./AdminSubjectInputList";
+import React, { useContext, useState } from "react";
+import { majorOfUnivHandle, subjectYear } from "./AdminSubjectInputList";
 
-import { useForm } from "react-hook-form";
-import useGetDocs from "../../../../../hooks/useGetDocs";
 import AdminContext from "../../../../../components/context/AdminContext";
-import InputList2 from "./InputList2";
 import InputList1 from "./InputList1";
-import useSetChildDoc from "../../../../../hooks/useSetChildDoc";
-import useUpdateDoc from "../../../../../hooks/useUpdateDoc";
-import useSetDoc from "../../../../../hooks/useSetDoc";
+import useGetAdminSubjectDocsByYear from "../../../../../hooks/useGetAdminSubjectDocsByYear";
+import SubjectInput from "./SubjectInput";
+import useGetDocs from "../../../../../hooks/useGetDocs";
 
 export default function AdminSubjectList() {
   const ctx = useContext(AdminContext);
 
   const { univ } = ctx;
-  const [adminUnivInput, setAdminUnivInput] = useState();
+  const [currentUniv, setCurrentUniv] = useState(null);
+  const [currentMajor, setCurrentMajor] = useState(null);
   const [majorList, setMajorList] = useState([]);
-  const [subjectList, setSubjectList] = useState([]);
-  const [subjectInput, setSubjectInput] = useState("");
+  const [inputSubjectYear, setInputSubjectYear] = useState(subjectYear[0]);
+  const [adminInputSubjectList, setAdminInputSubjectList] = useState([]);
 
-  const { register, handleSubmit } = useForm();
-
-  const setMajorListHandle = async (e) => {
+  const setCurrentUnivHandle = async (e) => {
     let index = Number(e.target.value);
     let value = univ[index];
-    setAdminUnivInput(value.name);
-    const newMajorList = await majorOfUnivHandle(value);
+    setCurrentUniv(value.name);
 
+    const newMajorList = await majorOfUnivHandle(value);
     setMajorList(newMajorList);
   };
 
-  const setSubjectTypeHandle = (e) => {
-    let index = Number(e.target.value);
-    let data = subjectList[index];
-
-    setSubjectInput(data);
+  const setCurrentMajorHandle = (e) => {
+    setCurrentMajor(majorList[Number(e.target.value)]);
   };
 
-  const subjectTypeHandle = async () => {
-    let subjectType = [];
-    const subjectTypeData = await useGetDocs("optional_subject");
-    subjectTypeData.forEach((data) => subjectType.push(data));
+  const getAdminSubjectHandle = async (selectedYear) => {
+    if (currentUniv == null || currentMajor == null)
+      return alert("대학과 학과를 선택해 주세요");
 
-    setSubjectList(subjectType);
+    // let defaultSubjectData = await useGetDocs(
+    //   `admin_subject/${selectedYear}/${currentUniv}/${currentMajor.name}/yogang`
+    // );
+
+    let defaultSubjectData = await useGetAdminSubjectDocsByYear(
+      selectedYear,
+      currentUniv,
+      currentMajor.name
+    );
+
+    defaultSubjectData.push(null);
+
+    setAdminInputSubjectList(defaultSubjectData);
+  };
+
+  const selectSubjectearHandle = async (e) => {
+    const selectedYear = e.target.value;
+    setInputSubjectYear(selectedYear);
+    getAdminSubjectHandle(selectedYear);
+  };
+
+  const getAdminSubjectList = (e) => {
+    e.preventDefault();
+    getAdminSubjectHandle(inputSubjectYear); // 없예도 되는지 테스트
+    //defaultValue 불러오는 코드
+  };
+
+  const deleteYogangHandle = async () => {
+    getAdminSubjectHandle(inputSubjectYear);
   };
 
   const inputList = [
@@ -56,98 +72,57 @@ export default function AdminSubjectList() {
       title: "대학교",
       name: "univType",
       optionList: univ,
-      inputType: 0,
-      onChange: setMajorListHandle,
+      onChange: setCurrentUnivHandle,
     },
     {
       title: "학과명",
       name: "majorType",
-      optionList: majorList.length
-        ? majorList
-        : [{ name: "대학을 선택해 주세요." }],
-      inputType: 1,
-      register: register,
-    },
-    {
-      title: "필요한 과목 수",
-      name: "needToStudySubjectCount",
-      optionList: needToStudyCountList,
-      inputType: 1,
-      register: register,
-    },
-    {
-      title: "과목명",
-      name: "subjectType",
-      optionList: subjectList,
-      inputType: 0,
-      onChange: setSubjectTypeHandle,
-    },
-    {
-      title: "과목등급",
-      name: "subjectGrade",
-      optionList: subjectGrade,
-      inputType: 1,
-      register: register,
+      optionList: majorList,
+      onChange: setCurrentMajorHandle,
     },
   ];
-
-  const setAdminSubjectList = async (data) => {
-    const { majorType, needToStudySubjectCount } = data;
-
-    if (majorType == "대학을 선택해 주세요.") {
-      alert("대학을 선택해 주세요.");
-    } else if (subjectInput == "") {
-      alert("과목을 선택해 주세요.");
-    } else {
-      let newData = {
-        ...data,
-        ...subjectInput,
-      };
-      let majorNeedStudyData = {
-        [majorType]: needToStudySubjectCount,
-      };
-      await useSetChildDoc(
-        "admin_subject",
-        adminUnivInput,
-        majorType,
-        subjectInput.name,
-        newData
-      );
-      await useUpdateDoc(
-        "admin_subject",
-        adminUnivInput,
-        majorNeedStudyData
-      ).catch((e) => {
-        if (e.code == "not-found") {
-          useSetDoc("admin_subject", adminUnivInput, majorNeedStudyData);
-        }
-      });
-
-      alert("입력을 완료했습니다.");
-    }
-  };
-
-  useEffect(() => {
-    subjectTypeHandle();
-  }, []);
 
   return (
     <div className={styles["item-container"]}>
       <div className={styles["input-container"]}>
         <p className={styles.title}>대학 및 학과 별 과목 입력</p>
-        <ul>
-          <form onSubmit={handleSubmit((data) => setAdminSubjectList(data))}>
-            {inputList.map((item, itemIndex) => (
-              <React.Fragment key={itemIndex}>
-                {item.inputType == 0 && <InputList1 item={item} />}
-                {item.inputType == 1 && <InputList2 item={item} />}
-              </React.Fragment>
-            ))}
-            <div className={styles["button-container"]}>
-              <button type="submit">과목 추가하기</button>
-            </div>
-          </form>
+        <select
+          className={styles["subject-year"]}
+          onChange={(e) => selectSubjectearHandle(e)}
+          value={inputSubjectYear}
+          required
+        >
+          {subjectYear.map((option, optionIndex) => (
+            <option key={optionIndex} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ul className={styles["subject-input"]}>
+          {inputList.map((item, itemIndex) => (
+            <InputList1 item={item} key={itemIndex} />
+          ))}
+          <div className={styles["button-container"]}>
+            <button onClick={(e) => getAdminSubjectList(e)}>
+              요강 추가하기
+            </button>
+          </div>
         </ul>
+        {adminInputSubjectList.length !== 0 && (
+          <div className={styles.wrapper}>
+            {adminInputSubjectList.map((item, index) => (
+              <SubjectInput
+                univ={currentUniv}
+                major={currentMajor}
+                selectedYear={inputSubjectYear}
+                preDefaultValue={item}
+                index={index}
+                deleteYogang={deleteYogangHandle}
+                key={index}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

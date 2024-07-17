@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../../../components/firebase/firebase";
 import useGetDoc from "../../../../../hooks/useGetDoc";
 
@@ -15,9 +15,19 @@ export const majorOfUnivHandle = async (e) => {
   return majorList;
 };
 
-export const needToStudySubjectCountHandle = async (univ, major) => {
-  const data = await useGetDoc("admin_subject", univ);
-  return Number(data[major]);
+export const needToStudySubjectCountHandle = async (
+  univ,
+  major,
+  selectedYear,
+  yogang
+) => {
+  let data = [];
+  const yogangDataQuery = await getDocs(
+    collection(db, `admin_subject/${selectedYear}/${univ}/${major}/yogang`)
+  );
+  yogangDataQuery.docs.forEach((doc) => data.push(doc.data()));
+
+  return data[yogang];
 };
 
 export const checkUserSubjectOfMajor = (
@@ -59,6 +69,7 @@ export const checkUserSubjectOfMajor = (
   let needToStudy = userSubjectInData < needToStudyCount;
   let needToStudySubjectCount = needToStudyCount - userSubjectInData;
   let needToStudySubject = [];
+  let sumSubjectCredit = [];
 
   //check needToStudySubject
 
@@ -81,11 +92,18 @@ export const checkUserSubjectOfMajor = (
     }
   }
 
+  for (let i = 0; i < userSubject.length; i++) {
+    sumSubjectCredit = Number(sumSubjectCredit) + userSubject[i].subjectCredit;
+  }
+
   let newResultUserDataOfMajor = {
     majorSubject: data,
     needToStudy: needToStudy,
-    needToStudySubject: needToStudy ? needToStudySubject : null,
+    sumSubjectCredit: sumSubjectCredit,
+    needToStudySubject: needToStudy ? needToStudySubject : [],
   };
 
   return [newSubjectListOfMajor, newResultUserDataOfMajor];
 };
+
+export const subjectYear = ["2022년", "2023년", "2024년"];
