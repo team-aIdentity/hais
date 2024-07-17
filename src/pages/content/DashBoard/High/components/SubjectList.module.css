@@ -44,5 +44,10 @@
 
     font-size: 20px;
     font-weight: 600;
+
+    .credit {
+      font-size: 16px;
+      color: #888888;
+    }
   }
 }

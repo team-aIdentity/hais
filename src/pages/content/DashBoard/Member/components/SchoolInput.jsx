@@ -8,7 +8,7 @@ import useGetChildDoc from "../../../../../hooks/useGetChildDoc";
 
 export default function SchoolInput() {
   const { register, handleSubmit } = useForm();
-  const [inputSchoolYear, setInputSchoolYear] = useState();
+  const [inputSchoolYear, setInputSchoolYear] = useState(schoolYear[0]);
   const [defaultValue, setDefaultValue] = useState("");
   const ctx = useContext(UserContext);
   const { userData } = ctx;

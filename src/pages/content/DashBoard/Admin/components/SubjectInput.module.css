@@ -1,0 +1,67 @@
+.subject-input {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  height: 350px;
+
+  border: 3px solid #e6e6e6;
+  border-radius: 10px;
+
+  gap: 20px;
+
+  padding: 10px;
+  margin-bottom: 20px;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scroll-box {
+    display: flex;
+    align-items: center;
+    width: 55%;
+    height: 220px;
+    border: 2px solid #e6e6e6;
+    border-radius: 10px;
+
+    div {
+      width: 100%;
+      padding: 40px;
+
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+    }
+
+    div::-webkit-scrollbar {
+      width: 0;
+    }
+
+    div li {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      min-width: 120px;
+      height: 120px;
+
+      background-color: #d6d6d6;
+      margin-right: 30px;
+
+      border-radius: 10px;
+
+      gap: 10px;
+    }
+
+    div li p {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+
+  button {
+    margin-left: 50px;
+  }
+}

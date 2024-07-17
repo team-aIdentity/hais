@@ -6,6 +6,7 @@ const UserContext = React.createContext({
   setUserData: () => {},
   setUpUserData: () => {},
   getUserSubject: () => {},
+  setUserSubject: () => {},
 });
 
 export default UserContext;

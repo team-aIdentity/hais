@@ -22,7 +22,7 @@ const SignUpList = [
     label: "Phone",
     name: "phone",
     type: "text",
-    placeholder: "01012341234",
+    placeholder: "010-1234-1234",
     require: true,
   },
   {
@@ -57,8 +57,12 @@ export default function SignUp() {
     const { phone, name, email, password } = data;
     const user = await useCreateAccount(email, password);
 
+    const newPhone = `${phone.split("-")[0]}-${phone.split("-")[1]}-${
+      phone.split("-")[2]
+    }`;
+
     const userData = {
-      phone: phone,
+      phone: newPhone,
       name: name,
       email: email,
       accessToken: user.accessToken,
@@ -76,7 +80,7 @@ export default function SignUp() {
     const { name, phone, email, password, conFirmPassword } = data;
 
     const regName = /^[가-힣]+$/;
-    const regPhone = /^01([0|1|6|7|8|9])([0-9]{4})([0-9]{4})$/;
+    const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$/;
     const regEmail = /^[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]/;
     const vaildName = name.match(regName);
     const vaildPhone = phone.match(regPhone);
