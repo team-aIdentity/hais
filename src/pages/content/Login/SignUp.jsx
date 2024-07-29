@@ -2,8 +2,7 @@ import styles from "./SignUp.module.css";
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import navBackImg from "../../../assets/navigate_back.png";
 
-import { useContext, useState } from "react";
-import UserContext from "../../../components/context/UserContext";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCreateAccount from "../../../hooks/useCreateAccount";
 import useSetDoc from "../../../hooks/useSetDoc";
@@ -67,10 +66,12 @@ export default function SignUp() {
       email: email,
       accessToken: user.accessToken,
       id: user.uid,
+      isVerified: false,
     };
 
     await useSetDoc("users", user.uid, userData);
-    nav("/login");
+
+    nav("/login/verify");
   };
 
   const [isNotValid, setIsNotValid] = useState(["", "", "", "", ""]);
