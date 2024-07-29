@@ -7,6 +7,7 @@ import Subject from "../pages/content/DashBoard/Subject/Subject";
 import High from "../pages/content/DashBoard/High/High";
 import SignUp from "../pages/content/Login/SignUp";
 import Login from "../pages/content/Login/Login";
+import Verify from "../pages/content/Login/Verify";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignUp />,
+      },
+      {
+        path: "verify",
+        element: <Verify />,
       },
     ],
   },

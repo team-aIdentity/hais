@@ -168,6 +168,14 @@
 
       transition: all 0.3s ease-in-out;
     }
+
+    p {
+      padding: 10px;
+      font-size: 14px;
+
+      color: gray;
+      text-decoration: underline;
+    }
   }
 
   .input:focus-within {
