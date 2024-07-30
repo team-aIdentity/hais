@@ -1,5 +1,6 @@
 import logoImg from "../../../assets/android-chrome-512x512.png";
 import profileImg from "../../../assets/dummy_profile.png";
+import logoutImg from "../../../assets/logout.png";
 
 import userCircle from "../../../assets/user-circle.png";
 import userGroup from "../../../assets/user-group.png";
@@ -7,12 +8,15 @@ import userPencil from "../../../assets/user-pencil.png";
 import userAcademicCap from "../../../assets/user-academic-cap.png";
 
 import styles from "./MainHeader.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import UserContext from "../../../components/context/UserContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../components/firebase/firebase";
 
 export default function MainHeader() {
   const userData = useContext(UserContext).userData;
+  const nav = useNavigate();
   const linkItemList = [
     {
       img: userCircle,
@@ -49,11 +53,28 @@ export default function MainHeader() {
     setListActiveList(newListActiveList);
   };
 
+  const logoutHandle = (e) => {
+    e.preventDefault();
+
+    if (confirm("로그아웃을 하시겠습니까?") == true) {
+      localStorage.removeItem("loginedId");
+
+      nav("/login");
+
+      signOut(auth);
+    } else {
+      return;
+    }
+  };
+
   return (
     <div className={styles.header}>
       <div className={styles["title-container"]}>
         <img src={logoImg} alt="logo" />
         <p>고교학점제 관리</p>
+        <button onClick={(e) => logoutHandle(e)}>
+          <img src={logoutImg} alt="logo" />
+        </button>
       </div>
       <div className={styles["profile-container"]}>
         <img src={profileImg} alt="profile" />

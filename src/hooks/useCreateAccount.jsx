@@ -8,7 +8,7 @@ import useCryptoValue from "./useCryptoValue";
 export default async function useCreateAccount(email, password) {
   try {
     const encryptPW = await useCryptoValue(password);
-    sendEmailVerification(auth.currentUser).then(() => {});
+    sendEmailVerification(auth.currentUser);
     const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -16,6 +16,8 @@ export default async function useCreateAccount(email, password) {
     );
     return user;
   } catch (e) {
-    console.log("createAccount >>>>> " + e);
+    if (e.code == "email-already-exists") {
+      alert("이미 계정이 있습니다.");
+    }
   }
 }
