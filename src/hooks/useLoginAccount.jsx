@@ -23,6 +23,7 @@ export default async function useLoginAccount(email, password) {
 
     return response.data.localId;
   } catch (e) {
-    console.error("Login Account >>>>> " + e);
+    if (e.code == "ERR_BAD_REQUEST") alert("올바른 계정을 입력해주세요");
+    console.error("Login Account >>>>> " + e.code);
   }
 }

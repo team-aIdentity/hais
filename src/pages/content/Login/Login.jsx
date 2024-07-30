@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useForm } from "react-hook-form";
 import useLoginAccount from "../../../hooks/useLoginAccount";
+import useGetDoc from "../../../hooks/useGetDoc";
 
 const signInList = [
   {
@@ -33,6 +34,12 @@ export default function Login() {
 
   const signinUserAccount = async (email, password) => {
     const uid = await useLoginAccount(email, password);
+    const userData = await useGetDoc("users", uid);
+    if (!userData.isVerified || userData.isVerified == undefined) {
+      alert("이메일 인증을 먼저 완료해주세요");
+      return;
+    }
+
     localStorage.setItem("loginedId", uid);
     userCtx.setUpUserData();
 
