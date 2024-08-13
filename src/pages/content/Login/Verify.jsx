@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./Verify.module.css";
 import { auth } from "../../../components/firebase/firebase";
@@ -18,13 +18,10 @@ export default function Verify() {
       alert("이미 인증을 완료했습니다.");
       return nav("/login");
     }
-
-    await sendEmailVerification(user);
   };
 
   const verifyCompleteHandle = async () => {
     await auth.currentUser.reload();
-    console.log(user);
     if (!user.emailVerified) {
       alert("인증을 완료해주세요");
     } else {
@@ -33,6 +30,19 @@ export default function Verify() {
 
       console.log("Verify Complete");
       nav("/login");
+    }
+  };
+
+  const sendVerifyEmail = async () => {
+    try {
+      await sendEmailVerification(user);
+      alert("인증 메일 전송 완료!");
+    } catch (e) {
+      if (e.code == "auth/too-many-requests") {
+        alert("너무 많은 요청입니다. 잠시 후 다시 시도해주세요");
+      } else {
+        alert("알 수 없는 오류입니다.");
+      }
     }
   };
 
@@ -50,6 +60,7 @@ export default function Verify() {
               입력한 이메일에서 인증링크를 클릭해주세요
             </p>
           </div>
+          <button onClick={() => sendVerifyEmail()}>인증 메일 보내기</button>
           <button onClick={() => verifyCompleteHandle()}>인증완료</button>
         </div>
       </div>
