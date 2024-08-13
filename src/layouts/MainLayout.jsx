@@ -17,7 +17,9 @@ export default function MainLayout() {
   checkIsLogin();
 
   useEffect(() => {
-    nav("/login");
+    if (userId == undefined) {
+      nav("/login");
+    }
   }, [nav]);
 
   return (
