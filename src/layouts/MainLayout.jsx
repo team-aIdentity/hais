@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import styles from "./MainLayout.module.css";
 import MainHeader from "../pages/common/MainHeader/MainHeader";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 
 export default function MainLayout() {
   const nav = useNavigate();
@@ -10,11 +10,15 @@ export default function MainLayout() {
   const checkIsLogin = async () => {
     if (userId == undefined) {
       alert("로그인을 먼저 진행해주세요");
-      nav("/login");
+      await nav("/login");
     }
   };
 
   checkIsLogin();
+
+  useEffect(() => {
+    nav("/login");
+  }, [nav]);
 
   return (
     <div className={styles["main-container"]}>
