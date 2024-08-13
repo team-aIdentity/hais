@@ -37,6 +37,7 @@ export default function Login() {
     const userData = await useGetDoc("users", uid);
     if (!userData.isVerified || userData.isVerified == undefined) {
       alert("이메일 인증을 먼저 완료해주세요");
+      nav("/login/verify");
       return;
     }
 

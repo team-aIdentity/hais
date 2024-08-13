@@ -2,8 +2,7 @@ import CryptoJS from "crypto-js";
 
 const useCryptoValue = async (data) => {
   try {
-    const secretKey = import.meta.env.VITE_CRYPTO_SECRET_KEY;
-    const hash = CryptoJS.AES.encrypt(data, secretKey).toString().slice(0, 8);
+    const hash = CryptoJS.SHA256(data).toString(CryptoJS.enc.Hex).slice(0, 8);
     return hash;
   } catch (e) {
     console.log("CryptoJS >>>>> code: " + e.code + " / message: " + e.message);
