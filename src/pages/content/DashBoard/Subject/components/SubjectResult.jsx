@@ -64,8 +64,14 @@ export default function SubjectResult({ currentUnivMajor }) {
             수강하고 있는 과목 :{" "}
             {userSubject.length !== 0 ? (
               <>
-                {userSubject.map((value, index) => (
-                  <span key={index}>{value.name} </span>
+                {userSubject.map((subject, index) => (
+                  <span
+                    key={index}
+                    className={styles["need-to-study"]}
+                    onClick={() => setIsModal(subject)}
+                  >
+                    {subject.name}
+                  </span>
                 ))}
               </>
             ) : (
