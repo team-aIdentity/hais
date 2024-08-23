@@ -8,6 +8,7 @@ import useGetChildDocs from "../../../../../hooks/useGetChildDocs";
 import UserContext from "../../../../../components/context/UserContext";
 import SubjectListOfMajor from "./SubjectListOfMajor";
 import useGetAdminSubjectDocsByYear from "../../../../../hooks/useGetAdminSubjectDocsByYear";
+import Modal from "../../../../common/MainHeader/Modal";
 
 export default function SubjectResult({ currentUnivMajor }) {
   const userSubject = useContext(UserContext).userSubject;
@@ -16,6 +17,7 @@ export default function SubjectResult({ currentUnivMajor }) {
   const [subjectListOfMajor, setSubjectListOfMajor] = useState(null);
   const [resultUserDataOfMajor, setResultUserDataOfMajor] = useState(null);
   const [needToStudyCount, setNeedToStudyCount] = useState(null);
+  const [isModal, setIsModal] = useState(null);
 
   const getResultByUserData = async () => {
     const data = (
@@ -42,6 +44,14 @@ export default function SubjectResult({ currentUnivMajor }) {
 
   return (
     <ul className={styles["subject-result"]}>
+      {isModal && (
+        <Modal
+          description={isModal.description}
+          info={isModal["etc_info"]}
+          category={isModal.category}
+          onClick={() => setIsModal(null)}
+        />
+      )}
       {subjectListOfMajor !== null &&
         subjectListOfMajor
           .slice(0, 4)
@@ -52,9 +62,15 @@ export default function SubjectResult({ currentUnivMajor }) {
         <div className={styles.result}>
           <p>
             수강하고 있는 과목 :{" "}
-            {userSubject.map((value, index) => (
-              <span key={index}>{value.name} </span>
-            ))}
+            {userSubject.length !== 0 ? (
+              <>
+                {userSubject.map((value, index) => (
+                  <span key={index}>{value.name} </span>
+                ))}
+              </>
+            ) : (
+              "없음"
+            )}
           </p>
           <p>
             필수로 들어야 하는 과목 추천 :{" "}
@@ -62,7 +78,13 @@ export default function SubjectResult({ currentUnivMajor }) {
               <>
                 {resultUserDataOfMajor.needToStudySubject.map(
                   (subject, index) => (
-                    <span key={index}>{subject.name} </span>
+                    <span
+                      key={index}
+                      className={styles["need-to-study"]}
+                      onClick={() => setIsModal(subject)}
+                    >
+                      {subject.name}
+                    </span>
                   )
                 )}
               </>
@@ -72,7 +94,10 @@ export default function SubjectResult({ currentUnivMajor }) {
           </p>
           <p>무조건 들어야 하는 과목 수 : {needToStudyCount}</p>
           <p>
-            수강한 과목의 전체 학점 : {resultUserDataOfMajor.sumSubjectCredit}
+            수강한 과목의 전체 학점 :{" "}
+            {resultUserDataOfMajor.sumSubjectCredit.length !== 0
+              ? `${resultUserDataOfMajor.sumSubjectCredit}`
+              : "없음"}
           </p>
           <p>
             학과에 반영되는 과목 수 :{" "}
@@ -81,7 +106,13 @@ export default function SubjectResult({ currentUnivMajor }) {
           <p>
             학과에 반영되는 과목 :{" "}
             {resultUserDataOfMajor.majorSubject.map((subject, index) => (
-              <span key={index}>{subject.name} </span>
+              <span
+                key={index}
+                className={styles["need-to-study"]}
+                onClick={() => setIsModal(subject)}
+              >
+                {subject.name}
+              </span>
             ))}
           </p>
         </div>
