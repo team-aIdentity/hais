@@ -8,4 +8,20 @@
   gap: 20px;
 
   width: 100%;
+
+  p {
+    margin-bottom: 20px;
+  }
+}
+
+.need-to-study {
+  border-radius: 5px;
+  padding: 10px;
+
+  color: white;
+
+  margin-right: 10px;
+
+  background-color: #4F46E5;
+  cursor: pointer;
 }
