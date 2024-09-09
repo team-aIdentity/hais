@@ -11,35 +11,35 @@ import LoginImage from "./LoginImage";
 
 const SignUpList = [
   {
-    label: "Name",
+    label: "이름",
     name: "name",
     type: "text",
     placeholder: "홍길동",
     require: true,
   },
   {
-    label: "Phone",
+    label: "전화번호",
     name: "phone",
     type: "text",
     placeholder: "010-1234-1234",
     require: true,
   },
   {
-    label: "Email",
+    label: "이메일",
     name: "email",
     type: "text",
     placeholder: "abcd1234@gmail.com",
     require: true,
   },
   {
-    label: "Password",
+    label: "비밀번호",
     name: "password",
     type: "password",
     placeholder: "6자리 이상, 20자리 이하",
     require: true,
   },
   {
-    label: "Confirm Password",
+    label: "비밀번호 확인",
     name: "conFirmPassword",
     type: "password",
     placeholder: "한번 더 입력해주세요",
@@ -127,7 +127,7 @@ export default function SignUp() {
             </button>
           </div>
           <img src={logoImg} alt="logo" />
-          <p className={styles.title}>Sign Up</p>
+          <p className={styles.title}>회원가입</p>
           <div className={styles["description-container"]}>
             <p className={styles.description}>
               You are browsing <span>Fuse React Demo</span>.
@@ -163,7 +163,7 @@ export default function SignUp() {
             </div>
           ))}
           <div className={styles["submit-container"]}>
-            <button type="submit">Sign Up</button>
+            <button type="submit">회원가입</button>
           </div>
         </form>
       </div>

@@ -77,10 +77,10 @@ export default function Login() {
       <div className={styles.login}>
         <div className={styles["information-container"]}>
           <img src={logoImg} alt="logo" />
-          <p className={styles.title}>Sign in</p>
+          <p className={styles.title}>로그인</p>
           <div className={styles["signup-container"]}>
-            <p>Don't have an account?</p>
-            <Link to="signup">Sign Up</Link>
+            <p>계정이 없으신가요?</p>
+            <Link to="signup">회원가입</Link>
           </div>
           <div className={styles["description-container"]}>
             <p className={styles.description}>
@@ -122,9 +122,9 @@ export default function Login() {
                 <input type="checkbox" />
                 <p>Remember me</p>
               </div>
-              <a href="">Forgot password?</a>
+              <a href="">비밀번호를 잃어버렸나요?</a>
             </div>
-            <button type="submit">Sign in</button>
+            <button type="submit">로그인</button>
           </div>
         </form>
       </div>
