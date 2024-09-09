@@ -10,14 +10,14 @@ import useGetDoc from "../../../hooks/useGetDoc";
 
 const signInList = [
   {
-    label: "Email",
+    label: "이메일",
     name: "email",
     type: "text",
     placeholder: "abcd1234@gmail.com",
     require: true,
   },
   {
-    label: "Password",
+    label: "비밀번호",
     name: "password",
     type: "password",
     placeholder: "6자리 이상, 20자리 이하",
