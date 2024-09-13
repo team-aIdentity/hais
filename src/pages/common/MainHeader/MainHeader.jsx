@@ -24,6 +24,11 @@ export default function MainHeader() {
       to: "admin",
     },
     {
+      img: userPencil,
+      title: "과목 및 학과추가",
+      to: "add-data",
+    },
+    {
       img: userGroup,
       title: "회원관리",
       to: "member",
@@ -45,10 +50,11 @@ export default function MainHeader() {
     false,
     false,
     false,
+    false,
   ]);
 
   const listActiveListHandler = (index) => {
-    let newListActiveList = [false, false, false, false];
+    let newListActiveList = [false, false, false, false, false];
     newListActiveList[index] = true;
     setListActiveList(newListActiveList);
   };

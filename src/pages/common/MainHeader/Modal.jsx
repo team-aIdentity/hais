@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 
 export default function Modal({ category, description, info, onClick }) {
   const modalElement = document.getElementById("modal");
-  console.log(category, description, info, onClick);
 
   return (
     <>
