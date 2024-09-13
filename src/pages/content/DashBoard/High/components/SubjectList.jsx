@@ -5,6 +5,7 @@ import Modal from "../../../../common/MainHeader/Modal";
 
 export default function SubjectList({ subjectList, deleteSubjectHandle }) {
   const [isModal, setIsModal] = useState();
+
   return (
     <>
       {subjectList.length !== 0 && (

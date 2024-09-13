@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Mainlayout from "../layouts/MainLayout";
 import LoginLayout from "../layouts/LoginLayout";
 import Admin from "../pages/content/DashBoard/Admin/Admin";
+import AddData from "../pages/content/DashBoard/AddData/AddData";
 import Member from "../pages/content/DashBoard/Member/Member";
 import Subject from "../pages/content/DashBoard/Subject/Subject";
 import High from "../pages/content/DashBoard/High/High";
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: "admin",
         element: <Admin />,
+      },
+      {
+        path: "add-data",
+        element: <AddData />,
       },
       {
         path: "member",
