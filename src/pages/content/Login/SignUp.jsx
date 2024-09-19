@@ -128,15 +128,6 @@ export default function SignUp() {
           </div>
           <img src={logoImg} alt="logo" />
           <p className={styles.title}>회원가입</p>
-          <div className={styles["description-container"]}>
-            <p className={styles.description}>
-              You are browsing <span>Fuse React Demo</span>.
-              <br />
-              Click on the "Sign in" button to access
-              <br />
-              the Demo and Documentation.
-            </p>
-          </div>
         </div>
         <form
           className={styles["input-form-container"]}

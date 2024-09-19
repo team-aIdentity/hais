@@ -92,11 +92,8 @@ export const getInputList = () => {
     const validLclsf = regex.test(std_lclsf_name);
     const validMclsf = regex.test(std_mclsf_name);
     const validSclsf = regex.test(std_sclsf_name);
-    const validUniv = regex.test(currentUniv.name);
 
     switch (true) {
-      case !validUniv:
-        break;
       case !validMajors:
         break;
       case !validLclsf:

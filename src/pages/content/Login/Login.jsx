@@ -82,15 +82,6 @@ export default function Login() {
             <p>계정이 없으신가요?</p>
             <Link to="signup">회원가입</Link>
           </div>
-          <div className={styles["description-container"]}>
-            <p className={styles.description}>
-              You are browsing <span>Fuse React Demo</span>.
-              <br />
-              Click on the "Sign in" button to access
-              <br />
-              the Demo and Documentation.
-            </p>
-          </div>
         </div>
         <form
           className={styles["input-form-container"]}
