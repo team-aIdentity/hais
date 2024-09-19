@@ -85,59 +85,56 @@ export const getInputList = () => {
   };
 
   const majorSubmit = (data) => {
-    const { majors, std_lclsf_name, std_mclsf_name, std_sclsf_name } = data;
+    // const { majors, std_lclsf_name, std_mclsf_name, std_sclsf_name } = data;
 
-    const regex = /^[가-힣a-zA-Z\s]+$/;
-    const validMajors = regex.test(majors);
-    const validLclsf = regex.test(std_lclsf_name);
-    const validMclsf = regex.test(std_mclsf_name);
-    const validSclsf = regex.test(std_sclsf_name);
+    // const regex = /^[가-힣a-zA-Z\s]+$/;
+    // const validLclsf = regex.test(std_lclsf_name);
+    // const validMclsf = regex.test(std_mclsf_name);
+    // const validSclsf = regex.test(std_sclsf_name);
 
-    switch (true) {
-      case !validMajors:
-        break;
-      case !validLclsf:
-        break;
-      case !validMclsf:
-        break;
-      case !validSclsf:
-        break;
-      default:
-        console.log("Complete Input Add Data");
-        return addMajorDB(data);
-    }
+    // switch (true) {
+    //   case !validLclsf:
+    //     break;
+    //   case !validMclsf:
+    //     break;
+    //   case !validSclsf:
+    //     break;
+    //   default:
+    //     console.log("Complete Input Add Data");
+    return addMajorDB(data);
+    // }
 
-    return alert("빈칸을 입력해주세요 (특수문자 제외)");
+    // return alert("빈칸을 입력해주세요 (특수문자 제외)");
   };
 
   const subjectSubmit = (data) => {
-    const { category, description, etc_info, group, name } = data;
+    // const { category, description, etc_info, group, name } = data;
 
-    const regex = /^[가-힣a-zA-Z\s]+$/;
+    // const regex = /^[가-힣a-zA-Z\s]+$/;
 
-    const validCategory = regex.test(category);
-    const validDescription = regex.test(description);
-    const validEtc_info = regex.test(etc_info);
-    const validGroup = regex.test(group);
-    const validName = regex.test(name.name);
+    // const validCategory = regex.test(category);
+    // const validDescription = regex.test(description);
+    // const validEtc_info = regex.test(etc_info);
+    // const validGroup = regex.test(group);
+    // const validName = regex.test(name.name);
 
-    switch (true) {
-      case !validCategory:
-        break;
-      case !validDescription:
-        break;
-      case !validEtc_info:
-        break;
-      case !validGroup:
-        break;
-      case !validName:
-        break;
-      default:
-        console.log("Complete Input Add Data");
-        return addSubjectDB(data);
-    }
+    // switch (true) {
+    //   case !validCategory:
+    //     break;
+    //   case !validDescription:
+    //     break;
+    //   case !validEtc_info:
+    //     break;
+    //   case !validGroup:
+    //     break;
+    //   case !validName:
+    //     break;
+    //   default:
+    //     console.log("Complete Input Add Data");
+    return addSubjectDB(data);
+    // }
 
-    return alert("빈칸을 입력해주세요 (특수문자 제외)");
+    // return alert("빈칸을 입력해주세요 (특수문자 제외)");
   };
 
   const getSubject = async () => {
