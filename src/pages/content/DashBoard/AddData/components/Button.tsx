@@ -6,7 +6,7 @@ interface PropType {
   onChange: () => {};
 }
 
-export function Button({ title, type, onChange }: PropType) {
+export default function Button({ title, type, onChange }: PropType) {
   return (
     <button
       type={type}
