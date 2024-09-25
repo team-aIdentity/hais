@@ -1,3 +1,5 @@
+import React from "react";
+
 import InputContainer from "./components/InputContainer";
 import { getInputList } from "./hooks/hooks";
 import styles from "./AddData.module.css";
@@ -20,8 +22,11 @@ export default function AddData() {
           <div className={styles["default-list"]}>
             {data.defaultList && (
               <ul>
-                {data.defaultList.map((data, index) => (
-                  <li key={index}>{data.name}</li>
+                {data.defaultList.map((_data, index) => (
+                  <li key={index} className={styles["default-list-li"]}>
+                    <p>{_data.name}</p>
+                    <button onClick={() => data.deleteHandle(_data)}>X</button>
+                  </li>
                 ))}
               </ul>
             )}

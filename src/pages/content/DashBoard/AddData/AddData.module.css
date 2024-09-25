@@ -49,8 +49,25 @@
   gap: 10px;
 
   margin-bottom: 50px;
+
+  ul {
+    width: 100%;
+  }
 }
 
 .add-data .default-list::-webkit-scrollbar {
   width: 0;
+}
+
+.add-data .default-list .default-list-li {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+  }
 }

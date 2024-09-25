@@ -5,6 +5,7 @@ import AdminContext from "../../../../../components/context/AdminContext";
 import useGetDocs from "../../../../../hooks/useGetDocs";
 import useAddDoc from "../../../../../hooks/useAddDoc";
 import useSetDoc from "../../../../../hooks/useSetDoc";
+import useDeleteDoc from "../../../../../hooks/useDeleteDoc";
 
 const getMajor = async (value) => {
   const majorList = [];
@@ -14,7 +15,9 @@ const getMajor = async (value) => {
   );
   const majorSnapShot = await getDocs(majorQuery);
   majorSnapShot.docs.forEach((doc) => majorList.push(doc.data()));
-
+  majorSnapShot.docs.forEach(
+    (doc, index) => (majorList[index] = { ...majorList[index], id: doc.id })
+  );
   return majorList;
 };
 
@@ -24,15 +27,13 @@ export const getInputList = () => {
   const [majorList, setMajorList] = useState(null);
   const [subjectList, setSubjectList] = useState([]);
 
-  const getMajorHandle = async (e) => {
-    e.preventDefault();
-
-    const majorList = await getMajor(univ[Number(e.target.value)].name);
+  const getMajorHandle = async (univData) => {
+    const majorList = await getMajor(univData.name);
 
     if (majorList == undefined) return;
 
     setMajorList(majorList);
-    setCurrentUniv(univ[Number(e.target.value)]);
+    setCurrentUniv(univData);
   };
 
   const addMajorDB = async (_data) => {
@@ -52,6 +53,7 @@ export const getInputList = () => {
     try {
       await useAddDoc("majors", data);
       alert("학과 추가 되었습니다");
+      getMajorHandle(currentUniv);
     } catch (e) {
       alert("알 수 없는 오류 입니다");
       console.log("Error Add Data >>>>> " + e);
@@ -145,6 +147,36 @@ export const getInputList = () => {
     setSubjectList(subjectType);
   };
 
+  const deleteMajor = async (data) => {
+    if (confirm("정말로 삭제하겠습니까? 학과:" + data.name)) {
+      try {
+        await useDeleteDoc(`majors/${data.id}`);
+        alert("학과가 삭제되었습니다");
+        getMajorHandle(currentUniv);
+      } catch (e) {
+        alert("알 수 없는 오류가 발생했습니다");
+        console.log("Error >>>>> ", e);
+      }
+    } else {
+      return;
+    }
+  };
+
+  const deleteSubject = async (data) => {
+    if (confirm("정말로 삭제하겠습니까? 과목:" + data.name)) {
+      try {
+        await useDeleteDoc(`optional_subject/${data.code}`);
+        alert("과목이 삭제되었습니다");
+        await getSubject();
+      } catch (e) {
+        alert("알 수 없는 오류가 발생했습니다");
+        console.log("Error >>>>> ", e);
+      }
+    } else {
+      return;
+    }
+  };
+
   useEffect(() => {
     getSubject();
   }, []);
@@ -154,12 +186,13 @@ export const getInputList = () => {
       title: "학과 추가",
       defaultList: majorList,
       onSubmit: majorSubmit,
+      deleteHandle: deleteMajor,
       firstInput: {
         title: "대학",
         value: "univ",
         type: "select",
         optionList: univ,
-        onChange: getMajorHandle,
+        onChange: (e) => getMajorHandle(univ[Number(e.target.value)]),
       },
       list: [
         {
@@ -195,6 +228,7 @@ export const getInputList = () => {
     {
       title: "과목 추가",
       defaultList: subjectList,
+      deleteHandle: deleteSubject,
       onSubmit: subjectSubmit,
       list: [
         {
